@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Trying to use environment variable to make the database url more secure
 # Set the environment variable in the web service in render
-DB_URL = os.getenv("DB_URL", "postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+DB_URL = os.getenv("DB_URL", "")
 
 @app.route('/')
 def hello_world():
@@ -45,7 +45,8 @@ def db_insert():
             ('Jayson', 'Tatum', 'Boston', 'Celtics', 0),
             ('Stephen', 'Curry', 'San Francisco', 'Warriors', 30),
             ('Nikola', 'Jokic', 'Denver', 'Nuggets', 15),
-            ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2);
+            ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2),
+            ('Ely', 'Seth', 'CU Boulder', 'The 3308ers', 6470);
     ''')
     conn.commit()
     conn.close()
