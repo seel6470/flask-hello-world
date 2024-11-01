@@ -1,8 +1,6 @@
 from flask import Flask
 import psycopg2
 import prefix
-app = Flask(__name__)
-prefix.use_PrefixMiddleware(app)
 
 @app.route('/')
 def hello_world():
@@ -31,9 +29,44 @@ def db_create():
     conn.close()
     return "Basketball Table Created"
 
+@app.route('/db_insert')
+def db_insert():
+    conn = psycopg2.connect("your_db_url_here")
+    cur = conn.cursor()
+    cur.execute('''
+        INSERT INTO Basketball (First, Last, City, Name, Number)
+        VALUES
+            ('Jayson', 'Tatum', 'Boston', 'Celtics', 0),
+            ('Stephen', 'Curry', 'San Francisco', 'Warriors', 30),
+            ('Nikola', 'Jokic', 'Denver', 'Nuggets', 15),
+            ('Kawhi', 'Leonard', 'Los Angeles', 'Clippers', 2);
+    ''')
+    conn.commit()
+    conn.close()
+    return "Basketball Table Populated"
 
-# main driver function
-if __name__ == '__main__':
-    # run() method of Flask class runs the application 
-    # on the local development server using port 3308 instead of port 5000.
-    app.run(host='0.0.0.0', port=3308)
+@app.route('/db_select')
+def db_select():
+    conn = psycopg2.connect("your_db_url_here")
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Basketball;")
+    records = cur.fetchall()
+    conn.close()
+
+    response = "<table><tr><th>First</th><th>Last</th><th>City</th><th>Name</th><th>Number</th></tr>"
+    for row in records:
+        response += "<tr>"
+        for item in row:
+            response += f"<td>{item}</td>"
+        response += "</tr>"
+    response += "</table>"
+    return response
+
+@app.route('/db_drop')
+def db_drop():
+    conn = psycopg2.connect("your_db_url_here")
+    cur = conn.cursor()
+    cur.execute("DROP TABLE IF EXISTS Basketball;")
+    conn.commit()
+    conn.close()
+    return "Basketball Table Dropped"
