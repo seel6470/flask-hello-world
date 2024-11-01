@@ -1,6 +1,5 @@
 from flask import Flask
 import psycopg2
-import prefix
 
 @app.route('/')
 def hello_world():
