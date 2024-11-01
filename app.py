@@ -3,19 +3,23 @@ import psycopg2
 
 app = Flask(__name__)
 
+# Trying to use environment variable to make the database url more secure
+# Set the environment variable in the web service in render
+DB_URL = os.getenv("DB_URL", "postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+
 @app.route('/')
 def hello_world():
     return "Hello World from Seth Ely (seel6470) in 3308"
 
 @app.route('/db_test')
 def db_test():
-    conn = psycopg2.connect("postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+    conn = psycopg2.connect(DB_URL)
     conn.close()
     return "Test DB connection successful!"
 
 @app.route('/db_create')
 def db_create():
-    conn = psycopg2.connect("your_db_url_here")
+    conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute('''
         CREATE TABLE IF NOT EXISTS Basketball(
@@ -32,7 +36,7 @@ def db_create():
 
 @app.route('/db_insert')
 def db_insert():
-    conn = psycopg2.connect("postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+    conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute('''
         INSERT INTO Basketball (First, Last, City, Name, Number)
@@ -48,7 +52,7 @@ def db_insert():
 
 @app.route('/db_select')
 def db_select():
-    conn = psycopg2.connect("postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+    conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute("SELECT * FROM Basketball;")
     records = cur.fetchall()
@@ -65,7 +69,7 @@ def db_select():
 
 @app.route('/db_drop')
 def db_drop():
-    conn = psycopg2.connect("postgresql://lab_10_test_db_user:tQ7u6YUYctCEThZ8765T9Bq38FDzJiI8@dpg-csifge1u0jms73fbcag0-a/lab_10_test_db")
+    conn = psycopg2.connect(DB_URL)
     cur = conn.cursor()
     cur.execute("DROP TABLE IF EXISTS Basketball;")
     conn.commit()
