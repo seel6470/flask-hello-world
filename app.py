@@ -1,6 +1,8 @@
 from flask import Flask
 import psycopg2
 
+app = Flask(__name__)
+
 @app.route('/')
 def hello_world():
     return "Hello World from Seth Ely (seel6470) in 3308"
